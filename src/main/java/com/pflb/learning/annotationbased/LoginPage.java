@@ -14,20 +14,26 @@ public class LoginPage extends AbstractPage {
     @FindBy(id = "login-button")
     private WebElement btnSubmit;
 
-    {
-        driver.get("http://at.pflb.ru/matrixboard2");
-    }
+//    {
+//        driver.get("http://at.pflb.ru/matrixboard2");
+//    }
 
     public LoginPage(WebDriver driver) {
         super(driver);
     }
 
-    public void fillUserName(String text) {
-        txtUsername.sendKeys(text);
+    public void open(String url) {
+        driver.get(url);
     }
 
-    public void fillPassword(String text) {
+    public LoginPage fillUserName(String text) {
+        txtUsername.sendKeys(text);
+        return this;
+    }
+
+    public LoginPage fillPassword(String text) {
         txtPassword.sendKeys(text);
+        return this;
     }
 
     public void submit() {

@@ -29,10 +29,10 @@ public class MatrixBoardTest {
 
     @Test
     public void loginTest() {
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.fillUserName("user");
-        loginPage.fillPassword("user");
-        loginPage.submit();
+        new LoginPage(driver)
+                .fillUserName("user")
+                .fillPassword("user")
+                .submit();
         MainPage mainPage = new MainPage(driver);
         Assert.assertEquals("user", mainPage.getCurrentUser());
     }
