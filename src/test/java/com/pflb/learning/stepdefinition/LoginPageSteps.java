@@ -2,6 +2,8 @@ package com.pflb.learning.stepdefinition;
 
 import com.pflb.learning.annotationbased.LoginPage;
 import com.pflb.learning.annotationbased.MainPage;
+import com.pflb.learning.jdbc.DataProvider;
+import com.pflb.learning.jdbc.entity.User;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.ru.И;
@@ -12,6 +14,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class LoginPageSteps {
@@ -19,6 +23,8 @@ public class LoginPageSteps {
 
     private LoginPage loginPage = null;
     private MainPage mainPage = null;
+
+    private Map<String, User> users = new HashMap<>();
 
     @Before
     public void setUp() {
@@ -71,5 +77,28 @@ public class LoginPageSteps {
     @Также("^на главной странице в правом верхнем углу видно имя пользователя \"([^\"]*)\"$")
     public void checkUserName(String text) {
         Assert.assertEquals(text, mainPage.getCurrentUser());
+    }
+
+    @Пусть("^в БД найден пользователь с ролью \"([^\"]*)\"$")
+    public void findUser(String role) {
+        User user = DataProvider.getUserByRole(role);
+        users.put(role, user);
+    }
+
+    @И("^пользователь вводит в поле \"([^\"]*)\" значение для роли \"([^\"]*)\"$")
+    public void setTextToInputRoleBased(String fieldName, String role) {
+        User user = users.get(role);
+        switch (fieldName) {
+            case "имя пользователя":
+                setTextToInput(fieldName, user.username);
+                break;
+
+            case "пароль":
+                setTextToInput(fieldName, user.password);
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid field name: " + fieldName);
+        }
     }
 }
